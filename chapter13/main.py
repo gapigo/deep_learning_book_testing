@@ -38,6 +38,11 @@ class Network(object):
                 print("Epoch {} finalizada". format(j))
     
     def update_mini_batch(self, mini_batch, eta):
+        '''
+        Atualiza os pesos e bias da rede aplicando
+        a descida do gradiente usando backpropagation para um único mini lote.
+        O `mini_batch` é uma lista de tuplas `(x, y)`, e `eta` é a taxa de aprendizado
+        '''
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         
@@ -50,7 +55,12 @@ class Network(object):
         self.biases = [b-(eta/len(mini_batch))*nb for b, nb in zip(self.biases, nabla_b)]
     
     def backprop(self, x, y):
-        
+        '''
+        Retorna uma tupla `(nabla_b, nabla_w)` representando o
+        gradiente para a função de custo C_x. `nabla_b` e
+        `nabla_w` são listas de camadas de matrizes numpy, semelhantes
+        a `self.biases` e `self.weights`;
+        '''
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         
@@ -74,6 +84,8 @@ class Network(object):
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activation[-2].transpose())
         
+        # Aqui, l = 1 significa a última camada de neurônios, l = 2 é a
+        # segunda e assim por diante.
         for l in range(2, self.num_layers):
             z = zs[-l]
             sp = sigmoid_prime(z)
@@ -93,3 +105,6 @@ print(sizes[1:])
 print(tuple(zip(sizes[:-1], sizes[1:])))
 print([np.random.randn(y, 1) for y in sizes[1:]])
 print([np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])])
+
+print([np.zeros(b.shape) for b in [np.random.randn(y, 1) for y in sizes[1:]]])
+
